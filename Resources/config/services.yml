@@ -1,0 +1,21 @@
+services:
+
+    yan.semaphore_sms.configuration:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\SemaphoreConfiguration
+        arguments: 
+            container: @service_container
+
+    yan.semaphore_sms.curl:
+        class: Yan\Bundle\SemaphoreSmsBundle\Request\Curl
+
+    yan.semaphore_sms.sms_sender:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender
+        arguments: 
+            config: @yan.semaphore_sms.configuration
+            curl: @yan.semaphore_sms.curl
+
+    yan.semaphore_sms.single_sms_sender:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\SingleSmsSender
+
+    yan.semaphore_sms.bulk_sms_sender:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\BulkSmsSender
