@@ -37,7 +37,7 @@ class SmsSender
 
     public function getUrl()
     {
-        return $this->urll
+        return $this->url;
     }
 
     /**
