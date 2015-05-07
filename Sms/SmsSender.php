@@ -12,7 +12,7 @@
 namespace Yan\Bundle\SemaphoreSmsBundle\Sms;
 
 use Yan\Bundle\SemaphoreSmsBundle\Request\Curl;
-use Yan\Bundle\SemaphoreSmsBundle\Sms\Message;
+use Yan\Bundle\SemaphoreSmsBundle\Exception\DeliveryFailureException;
 
 /**
  * Actual sending of sms
@@ -20,24 +20,32 @@ use Yan\Bundle\SemaphoreSmsBundle\Sms\Message;
  * @author  Yan Barreta
  * @version dated: April 30, 2015 3:55:29 PM
  */
-class SmsSender
+abstract class SmsSender
 {
 
-    private $config;
-    private $curl;
-    private $url;
+    protected $config;
+    protected $curl;
     
-    public function __construct(SemaphoreConfiguration $config, Curl $curl)
+    public function __construct(SemaphoreSmsConfiguration $config, Curl $curl)
     {
         $this->config = $config;
         $this->curl = $curl;
-
-        $this->initUrl();
     }
+
+    abstract public function initUrl();
+    abstract public function composeParameters(Message $message);
 
     public function getUrl()
     {
-        return $this->url;
+        return $this->initUrl();
+    }
+
+    public function getSender(Message $message)
+    {
+        $from = $message->getFrom();
+        $from = empty($from) ? $this->config->getSenderName() : $from;
+
+        return $from;
     }
 
     /**
@@ -49,16 +57,22 @@ class SmsSender
      */ 
     public function send(Message $message)
     {
-        $from = $message->getFrom();
-        $from = empty($from) ? $this->config->getSenderName() : $from;
-
-        $params = array(
-            'api' => $this->config->getApiKey(),
-            'number' => $message->formatNumber(),
-            'message' => $message->getMessage(),
-            'from' => $from
+        $result = $this->curl->post(
+            $this->getUrl(), 
+            $this->composeParameters($message)
         );
 
-        $this->curl->post($this->getUrl(), $params);
+        $json = json_decode($result, true);
+
+        if (!is_array($json)) {
+            throw new DeliveryFailureException('Request sending failed.');
+        }
+
+        if ($json['status'] != 'success') {
+            throw new DeliveryFailureException($json['message'], $json);
+        }
+        else {
+            return true;
+        }
     }
 }

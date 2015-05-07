@@ -13,6 +13,8 @@ namespace Yan\Bundle\SemaphoreSmsBundle\Request;
 
 use \Exception;
 
+use \Yan\Bundle\SemaphoreSmsBundle\Request\CurlRequest;
+
 /**
  * cUrl wrapper
  *
@@ -31,15 +33,16 @@ class Curl
 
     public function post($url, $parameters = array())
     {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
-
-        $result = curl_exec($ch);
-        curl_close($ch);
+        $curlRequest = new CurlRequest($url);
+        $curlRequest->setOption(CURLOPT_RETURNTRANSFER, true);
+        $curlRequest->setOption(CURLOPT_HEADER, 0);
+        $curlRequest->setOption(CURLOPT_VERBOSE, 0);
+        $curlRequest->setOption(CURLOPT_POST, true);
+        $curlRequest->setOption(CURLOPT_POSTFIELDS, $parameters);
+        
+        $result = $curlRequest->execute();
+        
+        $curlRequest->close();
 
         return $result;
     }
@@ -48,13 +51,14 @@ class Curl
     {
         $formattedUrl = sprintf("%s%s", $url, http_build_query($parameters));
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $formattedUrl);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $result = curl_exec($ch);
-        curl_close($ch);
+        $curlRequest = new CurlRequest($url);
+        $curlRequest->setOption(CURLOPT_URL, $formattedUrl);
+        $curlRequest->setOption(CURLOPT_FOLLOWLOCATION, true);
+        $curlRequest->setOption(CURLOPT_RETURNTRANSFER, true);
+        
+        $result = $curlRequest->execute();
+        
+        $curlRequest->close();
 
         return $result;
     }

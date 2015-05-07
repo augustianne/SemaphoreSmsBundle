@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Yan\Bundle\SemapahoreSmsBundle\Sms;
+namespace Yan\Bundle\SemaphoreSmsBundle\Sms;
 
 /**
 * Class for bundle configuration

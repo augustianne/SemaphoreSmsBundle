@@ -79,4 +79,39 @@ class SemaphoreSmsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($configs[$this->root]['sender_name'], $this->container->getParameter($this->root.".sender_name"));
     }
 
+    /**
+     * @covers Yan/Bundle/SemaphoreSmsBundle/DependencyInjection/SemaphoreSmsExtension::load
+     */
+    public function testDeliveryAddressValues()
+    {
+        $configs = array(
+            $this->root => array(
+                'api_key' => 'ThisIsATestApiKey',
+                'failure_delivery_address' => 'augustianne.barreta@gmail.com'
+            )
+        );
+
+        $this->sut->load($configs, $this->container);
+
+        $this->assertTrue($this->container->hasParameter($this->root.".failure_delivery_address"));
+        $this->assertEquals($configs[$this->root]['failure_delivery_address'], $this->container->getParameter($this->root.".failure_delivery_address"));
+    }
+
+    /**
+     * @covers Yan/Bundle/SemaphoreSmsBundle/DependencyInjection/SemaphoreSmsExtension::load
+     */
+    public function testDeliveryAddressDefaultValue()
+    {
+        $configs = array(
+            $this->root => array(
+                'api_key' => 'ThisIsATestApiKey'
+            )
+        );
+
+        $this->sut->load($configs, $this->container);
+
+        $this->assertTrue($this->container->hasParameter($this->root.".failure_delivery_address"));
+        $this->assertTrue(is_null($this->container->getParameter($this->root.".failure_delivery_address")));
+    }
+
 }

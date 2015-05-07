@@ -25,6 +25,7 @@ class SemaphoreSmsExtension extends Extension
         $container->setParameter('semaphore_sms', $config);
         
         $container->setParameter('semaphore_sms.api_key', $config['api_key']);
+        $container->setParameter('semaphore_sms.failure_delivery_address', $config['failure_delivery_address']);
         if (isset($config['sender_name'])) {
             $container->setParameter('semaphore_sms.sender_name', $config['sender_name']);
         }

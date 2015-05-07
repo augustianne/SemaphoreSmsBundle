@@ -35,7 +35,10 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('api_key')
                     ->isRequired()
                 ->end()
-                ->scalarNode('sender_name')
+                ->scalarNode('sender_name')->end()
+                ->scalarNode('failure_delivery_address')
+                    ->defaultValue(null)
+                ->end()
             ->end();
 
         return $treeBuilder;
