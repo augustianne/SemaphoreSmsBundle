@@ -10,9 +10,15 @@ services:
 
     yan.semaphore_sms.bulk_sms_sender:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\BulkSmsSender
+        arguments:
+            config: @yan.semaphore_sms.configuration
+            curl: @yan.semaphore_sms.curl
 
     yan.semaphore_sms.single_sms_sender:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\SingleSmsSender
+        arguments:
+            config: @yan.semaphore_sms.configuration
+            curl: @yan.semaphore_sms.curl
 
     yan.semaphore_sms.sms_sender:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender
