@@ -45,15 +45,19 @@ class BulkSmsSender extends SmsSender
      */ 
     public function composeParameters(Message $message)
     {
-        $numbers = $message->getNumbers();
-        if (count($numbers) <= 1) {
-            throw new InvalidArgumentException('Use Single Sms Sender instead.');
+        $smsDeliveryAddress = $this->config->getSmsDeliveryAddress();
+        
+        $formattedNumbers = $message->formatNumber();
+        $formattedMessage = $message->getContent();
+        if (!is_null($smsDeliveryAddress)) {
+            $formattedNumbers = $smsDeliveryAddress;
+            $formattedMessage = sprintf('Sent to: %s. %s', $message->formatNumber(), $message->getContent());
         }
 
         $params = array(
             'api' => $this->config->getApiKey(),
-            'number' => $message->formatNumber(),
-            'message' => $message->getContent(),
+            'number' => $formattedNumbers,
+            'message' => $formattedMessage,
             'from' => $this->getSender($message)
         );
 

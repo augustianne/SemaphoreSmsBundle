@@ -47,5 +47,27 @@ class SemaphoreSmsConfiguration
     {
         return $this->container->getParameter('semaphore_sms.sender_name');
     }
+
+    /**
+     * Retrieves sms_delivery_address
+     *
+     * @param void
+     * @return String
+     */
+    public function getFailureDeliveryAddress()
+    {
+        return $this->container->getParameter('semaphore_sms.failure_delivery_address');
+    }
+
+    /**
+     * Retrieves sms_delivery_address
+     *
+     * @param void
+     * @return String
+     */
+    public function getSmsDeliveryAddress()
+    {
+        return $this->container->getParameter('semaphore_sms.sms_delivery_address');
+    }
           
 }

@@ -12,6 +12,7 @@
 namespace Yan\Bundle\SemaphoreSmsBundle\Tests\Unit\Sms;
 
 use Yan\Bundle\SemaphoreSmsBundle\Sms\BulkSmsSender;
+use Yan\Bundle\SemaphoreSmsBundle\Sms\Message;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Unit test for SingleSmsSender
+ * Unit test for BulkSmsSender
  *
  * @author  Yan Barreta
  * @version dated: April 30, 2015 3:55:29 PM
@@ -72,26 +73,32 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SmsSender::getSender
-     */
-    public function testGetComposeParametersThrowsException()
+    public function getSmsDeliveryData()
     {
-        $curlMock = $this->getCurlMock();
-        $configurationMock = $this->getConfigurationMock();
-        
-        $messageMock = $this->getMessageMock();
-        $messageMock->expects($this->any())
-            ->method('getNumbers')
-            ->will($this->returnValue(array('09173149060')));
-
-        $sut = new BulkSmsSender($configurationMock, $curlMock);
-        $this->setExpectedException('\InvalidArgumentException');
-        $sut->composeParameters($messageMock);
+        return array(
+            array(
+                null, array('09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey', '09177028537',
+                array(
+                    'api' => 'ThisIsATestApiKey',
+                    'number' => '09177028537',
+                    'message' => 'Sent to: 09173149060,09173149060. Message',
+                    'from' => 'Sender'
+                )
+            ),
+            array(
+                null, array('09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey', null,
+                array(
+                    'api' => 'ThisIsATestApiKey',
+                    'number' => '09173149060,09173149060',
+                    'message' => 'Message',
+                    'from' => 'Sender'
+                )
+            )
+        );
     }
 
     /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SmsSender::getSender
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/BulkSmsSender::composeParameters
      * @dataProvider getComposeParametersData
      */
     public function testGetComposeParameters($fromValue, $formatNumberValue, $messageValue, $senderNameValue, $apiKeyValue, $expectedValue)
@@ -127,6 +134,38 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
         $sut = new BulkSmsSender($configurationMock, $curlMock);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
+
+    }
+
+    /**
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/BulkSmsSender::composeParameters
+     * @dataProvider getSmsDeliveryData
+     */
+    public function testSmsDeliveryAddressOnComposeParameters($fromValue, $formatNumberValue, $messageValue, $senderNameValue, $apiKeyValue, $smsDeliveryAddress, $expectedValue)
+    {
+        $curlMock = $this->getCurlMock();
+
+        $configurationMock = $this->getConfigurationMock();
+        $configurationMock->expects($this->any())
+            ->method('getApiKey')
+            ->will($this->returnValue($apiKeyValue));
+
+        $configurationMock->expects($this->any())
+            ->method('getSenderName')
+            ->will($this->returnValue($senderNameValue));
+
+        $configurationMock->expects($this->any())
+            ->method('getSmsDeliveryAddress')
+            ->will($this->returnValue($smsDeliveryAddress));
+
+        $sut = new BulkSmsSender($configurationMock, $curlMock);
+        
+        $message = new Message();
+        $message->setFrom($fromValue);
+        $message->setContent($messageValue);
+        $message->setNumbers($formatNumberValue);
+
+        $this->assertEquals($expectedValue, $sut->composeParameters($message));
 
     }
     

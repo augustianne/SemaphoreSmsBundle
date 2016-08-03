@@ -36,6 +36,16 @@ class Message
     }
 
     /**
+     * Sets an array of numbers the sms will be sent to
+     *
+     * @return void
+     */ 
+    public function setNumbers($numbers)
+    {
+        return $this->numbers = $numbers;
+    }
+
+    /**
      * Retrieves an array of recipeint's numbers
      *
      * @return Array
