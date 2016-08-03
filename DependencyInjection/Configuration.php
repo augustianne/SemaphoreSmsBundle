@@ -39,6 +39,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('failure_delivery_address')
                     ->defaultValue(null)
                 ->end()
+                ->scalarNode('sms_delivery_address')
+                    ->defaultValue(null)
+                ->end()
             ->end();
 
         return $treeBuilder;
