@@ -53,14 +53,16 @@ class SingleSmsSender extends SmsSender
         $smsDeliveryAddress = $this->config->getSmsDeliveryAddress();
         
         $formattedNumbers = $message->formatNumber();
+        $formattedMessage = $message->getContent();
         if (!is_null($smsDeliveryAddress)) {
             $formattedNumbers = $smsDeliveryAddress;
+            $formattedMessage = sprintf('Sent to: %s. %s', $message->formatNumber(), $message->getContent());
         }
         
         $params = array(
             'api' => $this->config->getApiKey(),
             'number' => $formattedNumbers,
-            'message' => $message->getContent(),
+            'message' => $formattedMessage,
             'from' => $this->getSender($message)
         );
 

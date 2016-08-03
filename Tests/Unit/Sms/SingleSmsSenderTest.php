@@ -80,7 +80,7 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
                 array(
                     'api' => 'ThisIsATestApiKey',
                     'number' => '09177028537',
-                    'message' => 'Message',
+                    'message' => 'Sent to: 09173149060. Message',
                     'from' => 'Sender'
                 )
             ),
