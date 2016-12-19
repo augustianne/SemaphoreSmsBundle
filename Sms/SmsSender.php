@@ -11,8 +11,9 @@
 
 namespace Yan\Bundle\SemaphoreSmsBundle\Sms;
 
-use Yan\Bundle\SemaphoreSmsBundle\Request\Curl;
 use Yan\Bundle\SemaphoreSmsBundle\Exception\DeliveryFailureException;
+use Yan\Bundle\SemaphoreSmsBundle\Request\Curl;
+use Yan\Bundle\SemaphoreSmsBundle\Sms\SemaphoreSmsConfiguration;
 
 /**
  * Actual sending of sms
@@ -69,7 +70,9 @@ abstract class SmsSender
         }
 
         if ($json['status'] != 'success') {
-            throw new DeliveryFailureException($json['message'], $json);
+            $message = isset($json['message']) ? $json['message'] : 'Delivery Failure';
+            
+            throw new DeliveryFailureException($message, $json);
         }
         else {
             return true;
