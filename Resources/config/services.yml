@@ -25,3 +25,9 @@ services:
         arguments:
             config: @yan.semaphore_sms.configuration
             curl: @yan.semaphore_sms.curl
+
+    yan.semaphore_sms.report:
+        class: Yan\Bundle\SemaphoreSmsBundle\Report\AccountReport
+        arguments:
+            config: @yan.semaphore_sms.configuration
+            curl: @yan.semaphore_sms.curl
