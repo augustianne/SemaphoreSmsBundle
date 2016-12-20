@@ -96,7 +96,7 @@ class AccountReport
      */ 
     public function getAccountStatus()
     {
-        $result = $this->curl->post(
+        $result = $this->curl->get(
             $this->getUrl(), 
             $this->composeParameters()
         );
