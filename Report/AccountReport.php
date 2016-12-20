@@ -68,7 +68,7 @@ class AccountReport
      */ 
     public function getAccountBalance()
     {
-        $result = $this->curl->post(
+        $result = $this->curl->get(
             $this->getUrl(), 
             $this->composeParameters()
         );
