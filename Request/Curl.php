@@ -49,7 +49,7 @@ class Curl
 
     public function get($url, $parameters = array())
     {
-        $formattedUrl = sprintf("%s%s", $url, http_build_query($parameters));
+        $formattedUrl = sprintf("%s?%s", $url, http_build_query($parameters));
 
         $curlRequest = new CurlRequest($url);
         $curlRequest->setOption(CURLOPT_URL, $formattedUrl);
