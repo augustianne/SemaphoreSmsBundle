@@ -64,10 +64,10 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
             array(
                 null, '09173149060,09173149060', 'Message', 'Sender', 'ThisIsATestApiKey', 
                 array(
-                    'api' => 'ThisIsATestApiKey',
+                    'apikey' => 'ThisIsATestApiKey',
                     'number' => '09173149060,09173149060',
                     'message' => 'Message',
-                    'from' => 'Sender'
+                    'sendername' => 'Sender'
                 )
             )
         );
@@ -79,19 +79,19 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
             array(
                 null, array('09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey', '09177028537',
                 array(
-                    'api' => 'ThisIsATestApiKey',
+                    'apikey' => 'ThisIsATestApiKey',
                     'number' => '09177028537',
                     'message' => 'Sent to: 09173149060,09173149060. Message',
-                    'from' => 'Sender'
+                    'sendername' => 'Sender'
                 )
             ),
             array(
                 null, array('09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey', null,
                 array(
-                    'api' => 'ThisIsATestApiKey',
+                    'apikey' => 'ThisIsATestApiKey',
                     'number' => '09173149060,09173149060',
                     'message' => 'Message',
-                    'from' => 'Sender'
+                    'sendername' => 'Sender'
                 )
             )
         );
@@ -166,6 +166,20 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
         $message->setNumbers($formatNumberValue);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($message));
+
+    }
+
+    /**
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/BulkSmsSender::initUrl
+     */
+    public function testInitUrl()
+    {
+        $curlMock = $this->getCurlMock();
+        $configurationMock = $this->getConfigurationMock();
+        
+        $sut = new BulkSmsSender($configurationMock, $curlMock);
+
+        $this->assertEquals('http://beta.semaphore.co/api/v4/messages', $sut->initUrl());
 
     }
     

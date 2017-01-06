@@ -33,7 +33,7 @@ class BulkSmsSender extends SmsSender
      */ 
     public function initUrl()
     {
-        return 'http://www.semaphore.co/v3/bulk_api/sms';
+        return 'http://beta.semaphore.co/api/v4/messages';
     }
 
     /**
@@ -55,10 +55,10 @@ class BulkSmsSender extends SmsSender
         }
 
         $params = array(
-            'api' => $this->config->getApiKey(),
+            'apikey' => $this->config->getApiKey(),
             'number' => $formattedNumbers,
             'message' => $formattedMessage,
-            'from' => $this->getSender($message)
+            'sendername' => $this->getSender($message)
         );
 
         return $params;

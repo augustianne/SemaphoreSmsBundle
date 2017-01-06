@@ -42,7 +42,7 @@ class AccountReport
      */ 
     public function getUrl()
     {
-        return 'http://api.semaphore.co/api/sms/account';
+        return 'http://beta.semaphore.co/api/v4/account';
     }
 
     /**
@@ -54,7 +54,7 @@ class AccountReport
     public function composeParameters()
     {
         $params = array(
-            'api' => $this->config->getApiKey()
+            'apikey' => $this->config->getApiKey()
         );
 
         return $params;
@@ -72,20 +72,14 @@ class AccountReport
             $this->getUrl(), 
             $this->composeParameters()
         );
-
+        
         $json = json_decode($result, true);
-
+        
         if (!is_array($json)) {
             throw new DeliveryFailureException('Request sending failed.');
         }
 
-        if ($json['status'] != 'success') {
-            $message = isset($json['message']) ? $json['message'] : 'Delivery Failure';
-            
-            throw new DeliveryFailureException($message, $json);
-        }
-        
-        return isset($json['balance']) ? $json['balance'] : false;
+        return isset($json['credit_balance']) ? $json['credit_balance'] : false;
     }
 
     /**
@@ -107,12 +101,6 @@ class AccountReport
             throw new DeliveryFailureException('Request sending failed.');
         }
 
-        if ($json['status'] != 'success') {
-            $message = isset($json['message']) ? $json['message'] : 'Delivery Failure';
-
-            throw new DeliveryFailureException($message, $json);
-        }
-        
-        return isset($json['account_status']) ? $json['account_status'] : false;
+        return isset($json['status']) ? $json['status'] : false;
     }
 }

@@ -63,10 +63,10 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
             array(
                 null, '09173149060', 'Message', 'Sender', 'ThisIsATestApiKey',
                 array(
-                    'api' => 'ThisIsATestApiKey',
+                    'apikey' => 'ThisIsATestApiKey',
                     'number' => '09173149060',
                     'message' => 'Message',
-                    'from' => 'Sender'
+                    'sendername' => 'Sender'
                 )
             )
         );
@@ -78,26 +78,26 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
             array(
                 null, '09173149060', 'Message', 'Sender', 'ThisIsATestApiKey', '09177028537',
                 array(
-                    'api' => 'ThisIsATestApiKey',
+                    'apikey' => 'ThisIsATestApiKey',
                     'number' => '09177028537',
                     'message' => 'Sent to: 09173149060. Message',
-                    'from' => 'Sender'
+                    'sendername' => 'Sender'
                 )
             ),
             array(
                 null, '09173149060', 'Message', 'Sender', 'ThisIsATestApiKey', null,
                 array(
-                    'api' => 'ThisIsATestApiKey',
+                    'apikey' => 'ThisIsATestApiKey',
                     'number' => '09173149060',
                     'message' => 'Message',
-                    'from' => 'Sender'
+                    'sendername' => 'Sender'
                 )
             )
         );
     }
 
     /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SmsSender::composeParameters
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SingleSmsSender::composeParameters
      */
     public function testGetComposeParametersThrowsException()
     {
@@ -115,7 +115,7 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SmsSender::composeParameters
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SingleSmsSender::composeParameters
      * @dataProvider getComposeParametersData
      */
     public function testGetComposeParameters($fromValue, $formatNumberValue, $messageValue, $senderNameValue, $apiKeyValue, $expectedValue)
@@ -156,7 +156,7 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SmsSender::composeParameters
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SingleSmsSender::composeParameters
      * @dataProvider getSmsDeliveryData
      */
     public function testSmsDeliveryAddressOnComposeParameters($fromValue, $formatNumberValue, $messageValue, $senderNameValue, $apiKeyValue, $smsDeliveryAddress, $expectedValue)
@@ -196,6 +196,20 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
         $sut = new SingleSmsSender($configurationMock, $curlMock);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
+
+    }
+
+    /**
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SingleSmsSender::initUrl
+     */
+    public function testInitUrl()
+    {
+        $curlMock = $this->getCurlMock();
+        $configurationMock = $this->getConfigurationMock();
+        
+        $sut = new SingleSmsSender($configurationMock, $curlMock);
+
+        $this->assertEquals('http://beta.semaphore.co/api/v4/messages', $sut->initUrl());
 
     }
     
