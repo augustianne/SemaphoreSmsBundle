@@ -54,7 +54,7 @@ class AccountReportTest extends \PHPUnit_Framework_TestCase
             array(
                 'ThisIsATestApiKey',
                 array(
-                    'api' => 'ThisIsATestApiKey'
+                    'apikey' => 'ThisIsATestApiKey'
                 )
             )
         );
@@ -63,32 +63,30 @@ class AccountReportTest extends \PHPUnit_Framework_TestCase
     public function getAccountBalanceData()
     {
         return array(
-            array('{"status":"success","balance":1000,"account_status":"Allowed"}', 1000),
-            array('{"status":"success","balance":2345,"account_status":"Allowed"}', 2345)
+            array('{"account_id":"00001","account_name":"Account Name","status":"Active","credit_balance":"1000"}', 1000),
+            array('{"account_id":"00001","account_name":"Account Name","status":"Active","credit_balance":"2345"}', 2345)
         );
     }
 
     public function getAccountBalanceThrowsExceptionData()
     {
         return array(
-            array('This is Not an array'),
-            array('{"status":"failure","balance":2345,"account_status":"Allowed"}')
+            array('This is Not an array')
         );
     }
 
     public function getAccountStatusData()
     {
         return array(
-            array('{"status":"success","balance":1000,"account_status":"Allowed"}', "Allowed"),
-            array('{"status":"success","balance":2345,"account_status":"Allowed"}', "Allowed")
+            array('{"account_id":"00001","account_name":"Account Name","status":"Active","credit_balance":"1000"}', "Active"),
+            array('{"account_id":"00001","account_name":"Account Name","status":"Active","credit_balance":"2345"}', "Active")
         );
     }
 
     public function getAccountStatusThrowsExceptionData()
     {
         return array(
-            array('This is Not an array'),
-            array('{"status":"failure","balance":2345,"account_status":"Allowed"}')
+            array('This is Not an array')
         );
     }
 
@@ -118,9 +116,9 @@ class AccountReportTest extends \PHPUnit_Framework_TestCase
     {
         $curlMock = $this->getCurlMock();
         $curlMock->expects($this->any())
-            ->method('post')
+            ->method('get')
             ->will($this->returnValue($dummyReturn));
-
+        
         $configurationMock = $this->getConfigurationMock();
 
         $sut = new AccountReport($configurationMock, $curlMock);
@@ -136,7 +134,7 @@ class AccountReportTest extends \PHPUnit_Framework_TestCase
     {
         $curlMock = $this->getCurlMock();
         $curlMock->expects($this->any())
-            ->method('post')
+            ->method('get')
             ->will($this->returnValue($dummyReturn));
 
         $configurationMock = $this->getConfigurationMock();
@@ -154,7 +152,7 @@ class AccountReportTest extends \PHPUnit_Framework_TestCase
     {
         $curlMock = $this->getCurlMock();
         $curlMock->expects($this->any())
-            ->method('post')
+            ->method('get')
             ->will($this->returnValue($dummyReturn));
 
         $configurationMock = $this->getConfigurationMock();
@@ -172,7 +170,7 @@ class AccountReportTest extends \PHPUnit_Framework_TestCase
     {
         $curlMock = $this->getCurlMock();
         $curlMock->expects($this->any())
-            ->method('post')
+            ->method('get')
             ->will($this->returnValue($dummyReturn));
 
         $configurationMock = $this->getConfigurationMock();
