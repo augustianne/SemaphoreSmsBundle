@@ -69,13 +69,6 @@ abstract class SmsSender
             throw new DeliveryFailureException('Request sending failed.');
         }
 
-        if ($json['status'] != 'success') {
-            $message = isset($json['message']) ? $json['message'] : 'Delivery Failure';
-            
-            throw new DeliveryFailureException($message, $json);
-        }
-        else {
-            return true;
-        }
+        return true;
     }
 }
