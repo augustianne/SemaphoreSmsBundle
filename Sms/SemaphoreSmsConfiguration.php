@@ -69,5 +69,16 @@ class SemaphoreSmsConfiguration
     {
         return $this->container->getParameter('semaphore_sms.sms_delivery_address');
     }
+
+    /**
+     * Retrieves limit_messages
+     *
+     * @param void
+     * @return String
+     */
+    public function isLimitMessages()
+    {
+        return $this->container->getParameter('semaphore_sms.limit_messages');
+    }
           
 }

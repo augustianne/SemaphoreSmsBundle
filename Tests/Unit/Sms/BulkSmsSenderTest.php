@@ -58,6 +58,15 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
         return $messageMock;
     }
 
+    public function getMessageComposerMock()
+    {
+        $messageComposerMock = $this->getMockBuilder('Yan\Bundle\SemaphoreSmsBundle\Sms\MessageComposer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $messageComposerMock;
+    }
+
     public function getComposeParametersData()
     {
         return array(
@@ -131,7 +140,9 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
             ->method('getNumbers')
             ->will($this->returnValue(array('09173149060', '09173149061')));
 
-        $sut = new BulkSmsSender($configurationMock, $curlMock);
+        $messageComposerMock = $this->getMessageComposerMock();
+
+        $sut = new BulkSmsSender($configurationMock, $curlMock, $messageComposerMock);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
 
@@ -158,7 +169,9 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
             ->method('getSmsDeliveryAddress')
             ->will($this->returnValue($smsDeliveryAddress));
 
-        $sut = new BulkSmsSender($configurationMock, $curlMock);
+        $messageComposerMock = $this->getMessageComposerMock();
+
+        $sut = new BulkSmsSender($configurationMock, $curlMock, $messageComposerMock);
         
         $message = new Message();
         $message->setFrom($fromValue);
@@ -176,8 +189,10 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
     {
         $curlMock = $this->getCurlMock();
         $configurationMock = $this->getConfigurationMock();
+
+        $messageComposerMock = $this->getMessageComposerMock();
         
-        $sut = new BulkSmsSender($configurationMock, $curlMock);
+        $sut = new BulkSmsSender($configurationMock, $curlMock, $messageComposerMock);
 
         $this->assertEquals('http://beta.semaphore.co/api/v4/messages', $sut->initUrl());
 
