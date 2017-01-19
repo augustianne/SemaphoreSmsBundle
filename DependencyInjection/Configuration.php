@@ -42,6 +42,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('sms_delivery_address')
                     ->defaultValue(null)
                 ->end()
+                ->booleanNode('limit_messages')->defaultTrue()->end()
             ->end();
 
         return $treeBuilder;

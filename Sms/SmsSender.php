@@ -26,11 +26,13 @@ abstract class SmsSender
 
     protected $config;
     protected $curl;
+    protected $messageComposer;
     
-    public function __construct(SemaphoreSmsConfiguration $config, Curl $curl)
+    public function __construct(SemaphoreSmsConfiguration $config, Curl $curl, MessageComposer $messageComposer)
     {
         $this->config = $config;
         $this->curl = $curl;
+        $this->messageComposer = $messageComposer;
     }
 
     abstract public function initUrl();
@@ -58,15 +60,22 @@ abstract class SmsSender
      */ 
     public function send(Message $message)
     {
-        $result = $this->curl->post(
-            $this->getUrl(), 
-            $this->composeParameters($message)
-        );
+        $messages = array($message);
+        if ($this->config->isLimitMessages()) {
+            $messages = $this->messageComposer->compose($message);
+        }
 
-        $json = json_decode($result, true);
+        foreach ($messages as $iMessage) {
+            $result = $this->curl->post(
+                $this->getUrl(), 
+                $this->composeParameters($iMessage)
+            );
 
-        if (!is_array($json)) {
-            throw new DeliveryFailureException('Request sending failed.');
+            $json = json_decode($result, true);
+            
+            if (!is_array($json)) {
+                throw new DeliveryFailureException('Request sending failed.');
+            }
         }
 
         return true;

@@ -57,6 +57,15 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
         return $messageMock;
     }
 
+    public function getMessageComposerMock()
+    {
+        $messageComposerMock = $this->getMockBuilder('Yan\Bundle\SemaphoreSmsBundle\Sms\MessageComposer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $messageComposerMock;
+    }
+
     public function getGetSenderData()
     {
         return array(
@@ -82,11 +91,8 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                '{"status":"error","message":"Not Authorized"}', 
-                '{"status":"error","message":"Not Enough Balance"}', 
-                '{"status":"error","message":"Feature Not Allowed"}', 
-                '{"status":"error","message":"Invalid Options"}', 
-                '{"status":"error","message":"Gateway Down"}'
+                false, 
+                null
             )
         );
     }
@@ -137,9 +143,11 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
             ->method('getFrom')
             ->will($this->returnValue($messageValue));
 
+        $messageComposerMock = $this->getMessageComposerMock();
+
         $value = 'http://api.semaphore.co/api/sms';
         $stub = $this->getMockBuilder('\Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender')
-            ->setConstructorArgs(array($configurationMock, $curlMock))
+            ->setConstructorArgs(array($configurationMock, $curlMock, $messageComposerMock))
             ->getMockForAbstractClass();
 
         $stub->expects($this->any())
@@ -163,9 +171,14 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
 
         $configurationMock = $this->getConfigurationMock();
         $messageMock = $this->getMessageMock();
+        
+        $messageComposerMock = $this->getMessageComposerMock();
+        $messageComposerMock->expects($this->any())
+            ->method('compose')
+            ->will($this->returnValue(array($messageMock)));
 
         $stub = $this->getMockBuilder('\Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender')
-            ->setConstructorArgs(array($configurationMock, $curlMock))
+            ->setConstructorArgs(array($configurationMock, $curlMock, $messageComposerMock))
             ->getMockForAbstractClass();
 
         $value = 'http://api.semaphore.co/api/sms';
@@ -194,9 +207,14 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
 
         $configurationMock = $this->getConfigurationMock();
         $messageMock = $this->getMessageMock();
+        
+        $messageComposerMock = $this->getMessageComposerMock();
+        $messageComposerMock->expects($this->any())
+            ->method('compose')
+            ->will($this->returnValue(array($messageMock)));
 
         $stub = $this->getMockBuilder('\Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender')
-            ->setConstructorArgs(array($configurationMock, $curlMock))
+            ->setConstructorArgs(array($configurationMock, $curlMock, $messageComposerMock))
             ->getMockForAbstractClass();
 
         $value = 'http://api.semaphore.co/api/sms';
@@ -225,9 +243,14 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
 
         $configurationMock = $this->getConfigurationMock();
         $messageMock = $this->getMessageMock();
+        
+        $messageComposerMock = $this->getMessageComposerMock();
+        $messageComposerMock->expects($this->any())
+            ->method('compose')
+            ->will($this->returnValue(array($messageMock)));
 
         $stub = $this->getMockBuilder('\Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender')
-            ->setConstructorArgs(array($configurationMock, $curlMock))
+            ->setConstructorArgs(array($configurationMock, $curlMock, $messageComposerMock))
             ->getMockForAbstractClass();
 
         $value = 'http://api.semaphore.co/api/sms';

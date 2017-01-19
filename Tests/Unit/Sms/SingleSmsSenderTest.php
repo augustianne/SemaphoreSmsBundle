@@ -57,6 +57,15 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
         return $messageMock;
     }
 
+    public function getMessageComposerMock()
+    {
+        $messageComposerMock = $this->getMockBuilder('Yan\Bundle\SemaphoreSmsBundle\Sms\MessageComposer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $messageComposerMock;
+    }
+
     public function getComposeParametersData()
     {
         return array(
@@ -109,7 +118,9 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
             ->method('getNumbers')
             ->will($this->returnValue(array('09173149060', '09173149061')));
 
-        $sut = new SingleSmsSender($configurationMock, $curlMock);
+        $messageComposerMock = $this->getMessageComposerMock();
+
+        $sut = new SingleSmsSender($configurationMock, $curlMock, $messageComposerMock);
         $this->setExpectedException('\InvalidArgumentException');
         $sut->composeParameters($messageMock);
     }
@@ -149,7 +160,9 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
             ->method('getNumbers')
             ->will($this->returnValue(array('09173149060')));
 
-        $sut = new SingleSmsSender($configurationMock, $curlMock);
+        $messageComposerMock = $this->getMessageComposerMock();
+
+        $sut = new SingleSmsSender($configurationMock, $curlMock, $messageComposerMock);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
 
@@ -193,7 +206,9 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
             ->method('getNumbers')
             ->will($this->returnValue(array('09173149060')));
 
-        $sut = new SingleSmsSender($configurationMock, $curlMock);
+        $messageComposerMock = $this->getMessageComposerMock();
+
+        $sut = new SingleSmsSender($configurationMock, $curlMock, $messageComposerMock);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
 
@@ -206,8 +221,9 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
     {
         $curlMock = $this->getCurlMock();
         $configurationMock = $this->getConfigurationMock();
-        
-        $sut = new SingleSmsSender($configurationMock, $curlMock);
+        $messageComposerMock = $this->getMessageComposerMock();
+
+        $sut = new SingleSmsSender($configurationMock, $curlMock, $messageComposerMock);
 
         $this->assertEquals('http://beta.semaphore.co/api/v4/messages', $sut->initUrl());
 
