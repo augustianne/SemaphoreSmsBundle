@@ -13,21 +13,27 @@ services:
         arguments:
             config: @yan.semaphore_sms.configuration
             curl: @yan.semaphore_sms.curl
+            messageComposer: @yan.semaphore_sms.message_composer
 
     yan.semaphore_sms.single_sms_sender:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\SingleSmsSender
         arguments:
             config: @yan.semaphore_sms.configuration
             curl: @yan.semaphore_sms.curl
+            messageComposer: @yan.semaphore_sms.message_composer
 
     yan.semaphore_sms.sms_sender:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender
         arguments:
             config: @yan.semaphore_sms.configuration
             curl: @yan.semaphore_sms.curl
+            messageComposer: @yan.semaphore_sms.message_composer
 
     yan.semaphore_sms.report:
         class: Yan\Bundle\SemaphoreSmsBundle\Report\AccountReport
         arguments:
             config: @yan.semaphore_sms.configuration
             curl: @yan.semaphore_sms.curl
+
+    yan.semaphore_sms.message_composer:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\MessageComposer
