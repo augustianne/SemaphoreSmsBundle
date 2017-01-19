@@ -32,7 +32,7 @@ class MessageComposer
     {
         $content = $message->getContent();
         
-        return $this->constructMessages($message, $newMessage);
+        return $this->constructMessages($message);
     }
 
     public function splitMessage($string) {
@@ -85,7 +85,7 @@ class MessageComposer
             $messages[] = $clonedMessage;
         }
 
-        return $messages;
+        return array_reverse($messages);
     }
 
 }
