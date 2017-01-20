@@ -81,30 +81,6 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getSmsDeliveryData()
-    {
-        return array(
-            array(
-                null, '09173149060', 'Message', 'Sender', 'ThisIsATestApiKey', '09177028537',
-                array(
-                    'apikey' => 'ThisIsATestApiKey',
-                    'number' => '09177028537',
-                    'message' => 'Sent to: 09173149060. Message',
-                    'sendername' => 'Sender'
-                )
-            ),
-            array(
-                null, '09173149060', 'Message', 'Sender', 'ThisIsATestApiKey', null,
-                array(
-                    'apikey' => 'ThisIsATestApiKey',
-                    'number' => '09173149060',
-                    'message' => 'Message',
-                    'sendername' => 'Sender'
-                )
-            )
-        );
-    }
-
     /**
      * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SingleSmsSender::composeParameters
      */
@@ -141,53 +117,6 @@ class SingleSmsSenderTest extends \PHPUnit_Framework_TestCase
         $configurationMock->expects($this->any())
             ->method('getSenderName')
             ->will($this->returnValue($senderNameValue));
-
-        $messageMock = $this->getMessageMock();
-        $messageMock->expects($this->any())
-            ->method('getFrom')
-            ->will($this->returnValue($fromValue));
-
-        $messageMock->expects($this->any())
-            ->method('formatNumber')
-            ->will($this->returnValue($formatNumberValue));
-
-        $messageMock->expects($this->any())            
-            ->method('getContent')
-            ->will($this->returnValue($messageValue));
-
-
-        $messageMock->expects($this->any())            
-            ->method('getNumbers')
-            ->will($this->returnValue(array('09173149060')));
-
-        $messageComposerMock = $this->getMessageComposerMock();
-
-        $sut = new SingleSmsSender($configurationMock, $curlMock, $messageComposerMock);
-
-        $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
-
-    }
-
-    /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/SingleSmsSender::composeParameters
-     * @dataProvider getSmsDeliveryData
-     */
-    public function testSmsDeliveryAddressOnComposeParameters($fromValue, $formatNumberValue, $messageValue, $senderNameValue, $apiKeyValue, $smsDeliveryAddress, $expectedValue)
-    {
-        $curlMock = $this->getCurlMock();
-
-        $configurationMock = $this->getConfigurationMock();
-        $configurationMock->expects($this->any())
-            ->method('getApiKey')
-            ->will($this->returnValue($apiKeyValue));
-
-        $configurationMock->expects($this->any())
-            ->method('getSenderName')
-            ->will($this->returnValue($senderNameValue));
-
-        $configurationMock->expects($this->any())
-            ->method('getSmsDeliveryAddress')
-            ->will($this->returnValue($smsDeliveryAddress));
 
         $messageMock = $this->getMessageMock();
         $messageMock->expects($this->any())

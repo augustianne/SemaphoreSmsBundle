@@ -12,6 +12,7 @@
 namespace Yan\Bundle\SemaphoreSmsBundle\Sms;
 
 use Yan\Bundle\SemaphoreSmsBundle\Sms\Message;
+use Yan\Bundle\SemaphoreSmsBundle\Sms\SemaphoreSmsConfiguration;
 
 /**
  * SMS Message properties
@@ -23,19 +24,49 @@ class MessageComposer
 {
 
     const CHARACTER_LIMIT = 155;
+    
+    protected $config;
+
+    public function __construct(SemaphoreSmsConfiguration $config)
+    {
+        $this->config = $config;
+    }
+
     /**
-     * Accepts a Message object, splits it into 160-character limit
-     *
-     * @return void
+     * Accepts a Message object, splits it into Messages 
+     * that has content under 155 characters
+     * 
+     * @param Message
+     * @return Array of Messages
      */ 
     public function compose(Message $message)
     {
-        $content = $message->getContent();
+        $smsDeliveryAddress = $this->config->getSmsDeliveryAddress();
+
+        if (!is_null($smsDeliveryAddress)) {
+            $formattedMessage = sprintf('Sent to: %s. %s', $message->formatNumber(), $message->getContent());
+
+            $message->setContent($formattedMessage);
+            $message->setNumbers(explode(',', str_replace(' ', '', $smsDeliveryAddress)));
+        }
+
+        $messages = array($message);
+
+        if (!$this->config->isLimitMessages()) {
+            return $messages;    
+        }    
         
         return $this->constructMessages($message);
     }
 
-    public function splitMessage($string) {
+    /**
+     * Splits string into 155-character substrings
+     *
+     * @param string
+     * @return Array
+     */ 
+    public function splitMessage($string) 
+    {
         $words = explode(' ', $string);
         
         $newMessage = array();
@@ -66,13 +97,21 @@ class MessageComposer
         return $newMessage;
     }
 
-    public function constructMessages(Message $message) {
-        
-        $newMessage = $this->splitMessage($message->getContent());
+    /**
+     * Accepts a Message object, splits it into Messages 
+     * that has content under 155 characters
+     * 
+     * @param Message
+     * @return Array of Messages
+     */ 
+    public function constructMessages(Message $message) 
+    {   
+        $content = $message->getContent();
+        $newMessage = $this->splitMessage($content);
 
         $parts = count($newMessage);
         $messages = array();
-        
+
         foreach ($newMessage as $key => $iNewMessage) {
             if ($parts > 1) {
                 $part = ($key+1);

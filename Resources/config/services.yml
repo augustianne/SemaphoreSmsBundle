@@ -37,3 +37,5 @@ services:
 
     yan.semaphore_sms.message_composer:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\MessageComposer
+        arguments:
+            config: @yan.semaphore_sms.configuration

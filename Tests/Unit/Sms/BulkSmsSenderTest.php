@@ -82,30 +82,6 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getSmsDeliveryData()
-    {
-        return array(
-            array(
-                null, array('09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey', '09177028537',
-                array(
-                    'apikey' => 'ThisIsATestApiKey',
-                    'number' => '09177028537',
-                    'message' => 'Sent to: 09173149060,09173149060. Message',
-                    'sendername' => 'Sender'
-                )
-            ),
-            array(
-                null, array('09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey', null,
-                array(
-                    'apikey' => 'ThisIsATestApiKey',
-                    'number' => '09173149060,09173149060',
-                    'message' => 'Message',
-                    'sendername' => 'Sender'
-                )
-            )
-        );
-    }
-
     /**
      * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/BulkSmsSender::composeParameters
      * @dataProvider getComposeParametersData
@@ -145,40 +121,6 @@ class BulkSmsSenderTest extends \PHPUnit_Framework_TestCase
         $sut = new BulkSmsSender($configurationMock, $curlMock, $messageComposerMock);
 
         $this->assertEquals($expectedValue, $sut->composeParameters($messageMock));
-
-    }
-
-    /**
-     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/BulkSmsSender::composeParameters
-     * @dataProvider getSmsDeliveryData
-     */
-    public function testSmsDeliveryAddressOnComposeParameters($fromValue, $formatNumberValue, $messageValue, $senderNameValue, $apiKeyValue, $smsDeliveryAddress, $expectedValue)
-    {
-        $curlMock = $this->getCurlMock();
-
-        $configurationMock = $this->getConfigurationMock();
-        $configurationMock->expects($this->any())
-            ->method('getApiKey')
-            ->will($this->returnValue($apiKeyValue));
-
-        $configurationMock->expects($this->any())
-            ->method('getSenderName')
-            ->will($this->returnValue($senderNameValue));
-
-        $configurationMock->expects($this->any())
-            ->method('getSmsDeliveryAddress')
-            ->will($this->returnValue($smsDeliveryAddress));
-
-        $messageComposerMock = $this->getMessageComposerMock();
-
-        $sut = new BulkSmsSender($configurationMock, $curlMock, $messageComposerMock);
-        
-        $message = new Message();
-        $message->setFrom($fromValue);
-        $message->setContent($messageValue);
-        $message->setNumbers($formatNumberValue);
-
-        $this->assertEquals($expectedValue, $sut->composeParameters($message));
 
     }
 
