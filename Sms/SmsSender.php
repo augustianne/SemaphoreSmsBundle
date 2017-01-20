@@ -60,10 +60,7 @@ abstract class SmsSender
      */ 
     public function send(Message $message)
     {
-        $messages = array($message);
-        if ($this->config->isLimitMessages()) {
-            $messages = $this->messageComposer->compose($message);
-        }
+        $messages = $this->messageComposer->compose($message);
 
         foreach ($messages as $iMessage) {
             $result = $this->curl->post(
