@@ -43,6 +43,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(null)
                 ->end()
                 ->booleanNode('limit_messages')->defaultTrue()->end()
+                ->booleanNode('disable_delivery')->defaultFalse()->end()
             ->end();
 
         return $treeBuilder;

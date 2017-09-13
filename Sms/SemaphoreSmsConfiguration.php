@@ -80,5 +80,16 @@ class SemaphoreSmsConfiguration
     {
         return $this->container->getParameter('semaphore_sms.limit_messages');
     }
+
+    /**
+     * Retrieves disable_delivery
+     *
+     * @param void
+     * @return String
+     */
+    public function isDisableDelivery()
+    {
+        return $this->container->getParameter('semaphore_sms.disable_delivery');
+    }
           
 }
