@@ -60,6 +60,10 @@ abstract class SmsSender
      */ 
     public function send(Message $message)
     {
+        if ($this->config->isDisableDelivery()) {
+            return;
+        }
+
         $messages = $this->messageComposer->compose($message);
 
         foreach ($messages as $iMessage) {
