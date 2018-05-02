@@ -15,6 +15,20 @@ services:
             curl: @yan.semaphore_sms.curl
             messageComposer: @yan.semaphore_sms.message_composer
 
+    yan.semaphore_sms.priority_sms_sender:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\PrioritySmsSender
+        arguments:
+            config: @yan.semaphore_sms.configuration
+            curl: @yan.semaphore_sms.curl
+            messageComposer: @yan.semaphore_sms.message_composer
+
+    yan.semaphore_sms.regular_sms_sender:
+        class: Yan\Bundle\SemaphoreSmsBundle\Sms\RegularSmsSender
+        arguments:
+            config: @yan.semaphore_sms.configuration
+            curl: @yan.semaphore_sms.curl
+            messageComposer: @yan.semaphore_sms.message_composer
+
     yan.semaphore_sms.single_sms_sender:
         class: Yan\Bundle\SemaphoreSmsBundle\Sms\SingleSmsSender
         arguments:

@@ -42,7 +42,7 @@ class AccountReport
      */ 
     public function getUrl()
     {
-        return 'http://beta.semaphore.co/api/v4/account';
+        return 'https://api.semaphore.co/api/v4/account';
     }
 
     /**
