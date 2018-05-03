@@ -30,6 +30,14 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             array(
                 array('09173149060', '09275293991'),
                 '09173149060,09275293991',
+            ),
+            array(
+                array('09173149060', '09275293991', '09173149060', '09173149060'),
+                '09173149060,09275293991',
+            ),
+            array(
+                array('09173149060', '09173149060', '09173149060', '09173149060'),
+                '09173149060',
             )
         );
     }
@@ -60,11 +68,27 @@ class MessageTest extends \PHPUnit_Framework_TestCase
      * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/Message::formatNumber
      * @dataProvider getNumberValues
      */
-    public function testSettingGettingOfNumbers($values, $result)
+    public function testAddingGettingOfNumbers($values, $result)
     {
         foreach ($values as $value) {
             $this->sut->addNumber($value);
         }
+        
+        $this->assertEquals($result, $this->sut->formatNumber());
+
+        $diff = array_diff($values, $this->sut->getNumbers());
+        $this->assertTrue(empty($diff));
+    }
+
+    /**
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/Message::setNumber
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/Message::getNumbers
+     * @covers Yan/Bundle/SemaphoreSmsBundle/Sms/Message::formatNumber
+     * @dataProvider getNumberValues
+     */
+    public function testSettingGettingOfNumbers($values, $result)
+    {
+        $this->sut->setNumbers($values);
         
         $this->assertEquals($result, $this->sut->formatNumber());
 

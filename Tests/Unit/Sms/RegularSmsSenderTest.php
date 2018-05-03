@@ -98,7 +98,7 @@ class RegularSmsSenderTest extends \PHPUnit_Framework_TestCase
                 null, array('09173149060', '09177028537', '09173149060', '09173149060'), 'Message', 'Sender', 'ThisIsATestApiKey',
                 array(
                     'apikey' => 'ThisIsATestApiKey',
-                    'number' => '09173149060,09177028537,09173149060,09173149060',
+                    'number' => '09173149060,09177028537',
                     'message' => 'Message',
                     'sendername' => 'Sender'
                 )

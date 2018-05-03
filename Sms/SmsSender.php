@@ -58,8 +58,6 @@ abstract class SmsSender
      */ 
     public function composeParameters(Message $message)
     {
-        $smsDeliveryAddress = $this->config->getSmsDeliveryAddress();
-        
         $formattedNumbers = $message->formatNumber();
         $formattedMessage = $message->getContent();
         
@@ -98,6 +96,10 @@ abstract class SmsSender
             
             if (!is_array($json)) {
                 throw new DeliveryFailureException('Request sending failed.');
+            }
+            
+            if (!isset($json[0]['status']) || $json[0]['status'] === 'Failed') {
+                throw new DeliveryFailureException('Request sending failed.');   
             }
         }
 
