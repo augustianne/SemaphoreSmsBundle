@@ -1,0 +1,9 @@
+imports:
+    - { resource: config.yml }
+
+#DBPatcher configuration
+semaphore_sms:
+    api_key: 1Dx1wu3qjjp3RnmtcQok
+    sms_delivery_address: '09173149060'
+    limit_messages: false
+    sender_name: "AUTODEAL"

@@ -32,7 +32,9 @@ class Message
      */ 
     public function addNumber($number)
     {
-        $this->numbers[] = $number;
+        if (!in_array($number, $this->numbers)) {
+            $this->numbers[] = $number;
+        }
     }
 
     /**
@@ -42,7 +44,7 @@ class Message
      */ 
     public function setNumbers($numbers)
     {
-        return $this->numbers = $numbers;
+        return $this->numbers = array_unique($numbers);
     }
 
     /**

@@ -36,7 +36,6 @@ abstract class SmsSender
     }
 
     abstract public function initUrl();
-    abstract public function composeParameters(Message $message);
 
     public function getUrl()
     {
@@ -49,6 +48,27 @@ abstract class SmsSender
         $from = empty($from) ? $this->config->getSenderName() : $from;
 
         return $from;
+    }
+
+    /**
+     * Composes text message for sending
+     *
+     * @param Message $message
+     * @return Array
+     */ 
+    public function composeParameters(Message $message)
+    {
+        $formattedNumbers = $message->formatNumber();
+        $formattedMessage = $message->getContent();
+        
+        $params = array(
+            'apikey' => $this->config->getApiKey(),
+            'number' => $formattedNumbers,
+            'message' => $formattedMessage,
+            'sendername' => $this->getSender($message)
+        );
+
+        return $params;
     }
 
     /**
@@ -76,6 +96,10 @@ abstract class SmsSender
             
             if (!is_array($json)) {
                 throw new DeliveryFailureException('Request sending failed.');
+            }
+            
+            if (!isset($json[0]['status']) || $json[0]['status'] === 'Failed') {
+                throw new DeliveryFailureException('Request sending failed.');   
             }
         }
 

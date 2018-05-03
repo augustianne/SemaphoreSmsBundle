@@ -18,7 +18,7 @@ use Yan\Bundle\SemaphoreSmsBundle\Sms\Message;
 use Yan\Bundle\SemaphoreSmsBundle\Sms\SmsSender;
 
 /**
- * Bulk SMS
+ * Bulk SMS. Deprecated, use RegularSmsSender
  *
  * @author  Yan Barreta
  * @version dated: April 30, 2015 3:55:29 PM

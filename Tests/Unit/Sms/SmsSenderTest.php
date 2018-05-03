@@ -101,9 +101,9 @@ class SmsSenderTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                '{"status":"success","message":"Delivered"}', 
-                '{"status":"success","message":"Sent to Network"}', 
-                '{"status":"success","message":"Message Queued"}'
+                '[{"status":"success","message":"Delivered"}]', 
+                '[{"status":"success","message":"Sent to Network"}]', 
+                '[{"status":"success","message":"Message Queued"}]'
             )
         );
     }
